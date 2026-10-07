@@ -1,0 +1,22 @@
+services:
+  finance:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: miakhil-family-finance
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - AUTH_SECRET=miakhil-family-super-secure-key-2026-v1
+    volumes:
+      # Persistent SQLite database storage on host machine
+      - ./data:/app/data
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
